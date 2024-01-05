@@ -1,12 +1,15 @@
-on: push
-name: jenkins
+name: Java CI
+on: [push]
 jobs:
-  jenkinsfile-runner-prepackaged:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: jenkinsfile-runner-prepackaged
-        uses: jenkinsci/jenkinsfile-runner-github-actions/jenkinsfile-runner-prepackaged@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+ jenkins-container-pipeline:
+   runs-on: ubuntu-latest
+   container:
+     image: ghcr.io/jenkinsci/jenkinsfile-runner:master
+   steps:
+     - uses: actions/checkout@v2
+     - uses:
+         jenkinsci/jfr-container-action@master
+       with:
+         command: run
+         jenkinsfile: Jenkinsfile
+         pluginstxt: plugins.txt
